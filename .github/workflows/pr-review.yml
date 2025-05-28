@@ -1,0 +1,119 @@
+name: Automated PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main, develop, master]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]' && !contains(github.event.pull_request.title, '[skip-review]')
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd scripts
+        npm install
+
+    - name: Get PR files
+      id: pr-files
+      run: |
+        # Get list of changed files
+        git diff --name-only origin/${{ github.base_ref }}...HEAD > changed_files.txt
+        echo "Changed files:"
+        cat changed_files.txt
+        
+        # Get PR diff
+        curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             -H "Accept: application/vnd.github.v3.diff" \
+             "${{ github.event.pull_request.url }}" > pr_diff.patch
+        
+        echo "PR diff saved to pr_diff.patch"
+
+    - name: Generate AI Review
+      id: ai-review
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_BODY: ${{ github.event.pull_request.body }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        REPO_OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        BASE_REF: ${{ github.base_ref }}
+        HEAD_REF: ${{ github.head_ref }}
+      run: |
+        cd scripts
+        node pr-reviewer.js
+
+    - name: Post Review Comment
+      if: steps.ai-review.outputs.review_content != ''
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const reviewContent = fs.readFileSync('scripts/review_output.md', 'utf8');
+          
+          // Check if we already posted a review to avoid duplicates
+          const existingComments = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number
+          });
+          
+          const botComment = existingComments.data.find(comment => 
+            comment.user.login === 'github-actions[bot]' && 
+            comment.body.includes('🤖 **Automated PR Review**')
+          );
+          
+          if (botComment) {
+            // Update existing comment
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: reviewContent
+            });
+            console.log('Updated existing review comment');
+          } else {
+            // Create new comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: reviewContent
+            });
+            console.log('Created new review comment');
+          }
+
+    - name: Upload artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pr-review-artifacts
+        path: |
+          changed_files.txt
+          pr_diff.patch
+          scripts/review_output.md
+        retention-days: 7

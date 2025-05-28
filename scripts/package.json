@@ -1,0 +1,24 @@
+{
+  "name": "pr-reviewer",
+  "version": "1.0.0",
+  "description": "Automated PR review using AI",
+  "main": "pr-reviewer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
+    "openai": "^4.52.7",
+    "axios": "^1.7.2",
+    "fs-extra": "^11.2.0"
+  },
+  "keywords": [
+    "github",
+    "pr",
+    "review",
+    "ai",
+    "automation"
+  ],
+  "author": "Your Team",
+  "license": "MIT"
+}
