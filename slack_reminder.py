@@ -7,21 +7,11 @@ from pathlib import Path
 import logging
 
 # Configuration
-# WEBHOOK_URL = "https://hooks.slack.com/services/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"  # This is the slack-test-sye channel
-WEBHOOK_URL = "https://hooks.slack.com/services/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"  # This is the sc-mission-control-squad channel
+WEBHOOK_URL = "Your Slack Webhook URL Here" 
 
 TEAM_MEMBERS = [
-    "<@U02CHL4JHFG>", #@Jack Clarke
-    "<@UU9QLB5C7>", #@Chuck Adams
-    "<@U5KA1DAFK>", #@Rod Bowen-Willer
-    "<@U6YFMHFA9>", #@Jessie Wang
-    "<@U02NQFQ5MHT>", #@Mitchell Smith
-    "<@U036F4UP90D>", #@Lewis Kendeh
-    "<@U4VRYAFMK>", #@Fadel Wanssa
-    "<@U04464V5YGH>", #@Ihor Hrytsyk
-    "<@UCLJV0R6X>", #@Kyle Chen
-    "<@U059S0ATW05>", #@Dmytro Kuchyn
-    "<@U02AJK79B4J>" #@Daniel Rodrigue
+    "<@U04T6K8F5Q1>",  # Member 1
+    "<@U04T6K8F5Q2>"  # Member 2
 ]
 
 # File to store the current captain index
