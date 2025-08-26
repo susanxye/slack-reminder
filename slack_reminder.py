@@ -7,9 +7,7 @@ from pathlib import Path
 import logging
 
 # Configuration
-# WEBHOOK_URL = "https://hooks.slack.com/services/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"  # This is the slack-test-sye channel
-# WEBHOOK_URL = "https://hooks.slack.com/services/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" # this is the sc-mission-control-squad channel
-WEBHOOK_URL = "https://hooks.slack.com/services/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" # this is the sc-event-mesh-general channel
+WEBHOOK_URL = "" 
 
 TEAM_MEMBERS = [
     "<@U02CHL4JHFG>", #@Jack Clarke
