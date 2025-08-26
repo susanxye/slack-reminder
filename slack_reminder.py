@@ -87,8 +87,6 @@ def send_deployment_captain_reminder():
                 f"{current_captain} is this week's Deployment Captain.\n"
                 f"Next week's Deployment Captain: {next_captain}\n"
                 f"Following week's Deployment Captain: {next_next_captain}\n"
-                "We deploy on Tuesdays and Thursdays. Instruction: https://sol-jira.atlassian.net/wiki/spaces/MRE/pages/1377697855/Mission+Control+Launch+Pad+Deployments\n"
-                "For RC pipeline issues, please follow the guide: https://sol-jira.atlassian.net/wiki/spaces/EMG/pages/4327440604/RC+Plat+Maintenance+Process"
             )
         }
 
