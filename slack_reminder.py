@@ -10,16 +10,8 @@ import logging
 WEBHOOK_URL = "" 
 
 TEAM_MEMBERS = [
-    "<@U02CHL4JHFG>", #@Jack Clarke
-    "<@U02NQFQ5MHT>", #@Mitchell Smith
-    "<@U6YFMHFA9>", #@Jessie Wang
-    "<@UU9QLB5C7>", #@Chuck Adams
-    "<@U036F4UP90D>", #@Lewis Kendeh
-    "<@U4VRYAFMK>", #@Fadel Wanssa
-    "<@U04464V5YGH>", #@Ihor Hrytsyk
-    "<@UCLJV0R6X>", #@Kyle Chen
-    "<@U059S0ATW05>", #@Dmytro Kuchyn
-    "<@U02AJK79B4J>" #@Daniel Rodrigue
+    "<@UABCD>",
+    "<@UEFGH>"
 ]
 
 # File to store the current captain index
